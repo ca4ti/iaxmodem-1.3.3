@@ -754,7 +754,7 @@ int iax_parse_ies(struct iax_ies *ies, unsigned char *data, int datalen)
 			}
 			break;
 		case IAX_IE_CALLTOKEN:
-			outputf("IAX2 CallToken currently unsupported and ignored.\n");
+			/* IAX2 CallToken currently unsupported and ignored. */
 			break;
 		default:
 			snprintf(tmp, (int)sizeof(tmp), "Ignoring unknown information element '%s' (%d) of length %d\n", iax_ie2str(ie), ie, len);
