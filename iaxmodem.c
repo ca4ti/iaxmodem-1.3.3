@@ -598,8 +598,8 @@ t31_call_control_handler(t31_state_t *s, void *user_data, int op, const char *nu
 		iax_destroy(session[0]);
 		phonestate = PHONE_FREED;
 		if (gothup) sighandler(SIGHUP);
-	    modemstate = MODEM_ONHOOK;
 	    }
+	    modemstate = MODEM_ONHOOK;
 	    break;
 	case AT_MODEM_CONTROL_CTS:
 	    {

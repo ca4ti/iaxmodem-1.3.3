@@ -1,3 +1,5 @@
+	fix bug (segfault) on some hangups (Stephan Eisvogel)
+	support passing "+" in the dialstring
 	simulate hangup when replay EOF is encountered
 1.3.0
 	improve logging for dspdebug
