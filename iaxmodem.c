@@ -187,6 +187,7 @@ printlog(FILE *fp, char *fmt, ...)
   va_start(ap, fmt);
   vfprintf(fp, fmt, ap);
   va_end(ap);
+  fflush(fp);
 }
 
 void
@@ -674,8 +675,8 @@ iaxmodem(const char *config, int nondaemon)
      * IAXmodem is started as root, but drops privileges once the
      * required superuser tasks are performed.
      */
-    uid_t uucp_uid;
-    gid_t uucp_gid;
+    uid_t modem_uid;
+    gid_t modem_gid;
     struct passwd *pwent;
     int fd;
     char logfile[256];
@@ -689,8 +690,8 @@ iaxmodem(const char *config, int nondaemon)
 	_exit(-1);
     }
 
-    uucp_uid = pwent->pw_uid;
-    uucp_gid = pwent->pw_gid;
+    modem_uid = pwent->pw_uid;
+    modem_gid = pwent->pw_gid;
 
     strcpy(devlink, "/dev/iaxmodem");
     strcpy(server, "127.0.0.1");
@@ -903,8 +904,8 @@ iaxmodem(const char *config, int nondaemon)
     }
 
     /* Root privileges not needed anymore, drop privs. */
-    setegid(uucp_gid);
-    seteuid(uucp_uid);
+    setegid(modem_gid);
+    seteuid(modem_uid);
     
     if ((port = iax_init(port) < 0)) {
 	printlog(LOG_ERROR, "Fatal error: failed to initialize iax with port %d\n", port);
