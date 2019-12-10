@@ -998,14 +998,15 @@ iaxmodem(const char *config, int nondaemon)
 		tv.tv_usec = 0;
 	    }
 	} else if (modemstate == MODEM_CALLING) {
-	    tv.tv_sec = 45; tv.tv_usec = 0;	/* give up after 45 seconds */
+	    tv.tv_sec = (t31_state.at_state.p.s_regs[7] + 5); 	/* give up after S7+5 seconds */
+	    tv.tv_usec = 0;
 	    timeradd(&lastdtedata, &tv, &tv);
 	    timersub(&tv, &now, &tv);
 	    if (tv.tv_sec > 500 || tv.tv_sec < -500) {
 		/* This is a silly result.  The clock must have skipped. */
 		lastdtedata = now;
 		printlog(LOG_INFO, "Clock skip detected in DTE communication (%d seconds).  Compensating.\n", tv.tv_sec);
-		tv.tv_sec = 45;
+		tv.tv_sec = (t31_state.at_state.p.s_regs[7] + 5);
 		tv.tv_usec = 0;
 	    }
 	} else if (refreshreq) {

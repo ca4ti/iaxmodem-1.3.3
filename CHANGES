@@ -1,3 +1,4 @@
+	stop fast looping after 45 seconds of calling state
 	fix bug (segfault) on some hangups (Stephan Eisvogel)
 	support passing "+" in the dialstring
 	simulate hangup when replay EOF is encountered
