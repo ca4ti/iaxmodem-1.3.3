@@ -142,6 +142,7 @@ static int nodaemon = 0;
 static int commalen = 2;
 static int defskew = 0;
 static int skew;
+static int audiobuflen = 100;
 
 struct modem {
     struct modem *next;
@@ -426,6 +427,12 @@ setconfigline(char *line)
 	while (*line == '\t' || *line == ' ') line++;
 	defskew = atoi(line);
 	printlog(LOG_INFO, "Setting skew = %d\n", defskew);
+    }
+    if (strncasecmp(line, "audiobuflen", 11) == 0) {
+	line += 11;
+	while (*line == '\t' || *line == ' ') line++;
+	audiobuflen = atoi(line);
+	printlog(LOG_INFO, "Setting audiobuflen = %d\n", audiobuflen);
     }
 }
 
@@ -765,9 +772,9 @@ iaxmodem(const char *config, int nondaemon)
     int i;
     unsigned int last_ts = 0;
 
-    int16_t audiobuf[VOIP_PACKET_SIZE*100];
+    int16_t audiobuf[VOIP_PACKET_SIZE*audiobuflen];
     int16_t* audiobufpos = audiobuf;
-    memset(audiobuf, (int16_t) 0, sizeof(int16_t)*VOIP_PACKET_SIZE*100);
+    memset(audiobuf, (int16_t) 0, sizeof(int16_t)*VOIP_PACKET_SIZE*audiobuflen);
 
     snprintf(dspnowaudiofile, sizeof(dspnowaudiofile), "/tmp/%s-dsp.raw.recording", regpeer);
     snprintf(iaxnowaudiofile, sizeof(iaxnowaudiofile), "/tmp/%s-iax.raw.recording", regpeer);
@@ -1486,7 +1493,7 @@ iaxmodem(const char *config, int nondaemon)
 			    if (t31_state.at_state.at_rx_mode == AT_MODE_OFFHOOK_COMMAND ||
 				t31_state.at_state.at_rx_mode == AT_MODE_ONHOOK_COMMAND) {
 				/* Save this audio for later. */
-				if ((audiobufpos + samples) > (audiobuf + VOIP_PACKET_SIZE*100)) {
+				if ((audiobufpos + samples) > (audiobuf + VOIP_PACKET_SIZE*audiobuflen)) {
 				    int16_t bufsamples = audiobufpos - (audiobuf + samples);
 				    memmove(audiobuf, audiobuf+samples, bufsamples*sizeof(int16_t));
 				    audiobufpos = audiobuf + bufsamples;

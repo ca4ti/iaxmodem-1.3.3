@@ -134,6 +134,15 @@ The "dspdebug" entry enables debugging output for the DSPs.
 
 The "nodaemon" entry exempts the modem from inclusion with daemon use.
 
+The "skew" entry provides a initial audio skew value for each call.  (Skew
+compensates for the delta between the local system clock and the PBX clock.
+
+The "audiobuflen" entry adjusts the length of the call audio buffer which
+provides for audio buffering during a call when the modem may be in 
+command mode and compensates for slowed DTE responsiveness (e.g. due to
+heavy system load).  This is specified in units of audio packets and
+defaults to 100 (so, 2 seconds).
+
 Comments can be placed into the IAXmodem configuration files by beginning
 them with a semicolon (";").
 
