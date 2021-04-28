@@ -3283,20 +3283,7 @@ struct iax_event *iax_get_event(int blocking)
 				/* It's been acked.  No need to send it.   Destroy the old
 				   frame. If final, destroy the session. */
 				if (frame->final)
-					/* sskacar: Quick deallocation and allocation of sessions may result in
-					   the same-address-use ! Therefore we cannot trust remote-sent address only
-					   Best bet is checking by somewhat unique properties to decide
-					   if we really intend to destroy this session.
-					   Example Case:
-					   - Have a call
-					   - Dump that call and immediately request a new call (or have a incoming call request by a lesser chance)
-					   - By considerable probability, you might get the previous address for the session.
-					   - When execution hits to this point as a result of previous call ending
-					     (as client informs server about dumping and frees the previous session,
-					      server proccess call-dumping and eventually this point reached)
-					   - frame->session param to the destroy_session() belongs to the new & valid session ! */
-					if (frame->session && (frame->callno == frame->session->callno))
-						destroy_session(frame->session);
+					destroy_session(frame->session);
 				if (frame->data)
 					free(frame->data);
 				free(frame);

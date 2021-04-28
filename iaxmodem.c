@@ -543,7 +543,7 @@ t31_call_control_handler(t31_state_t *s, void *user_data, int op, const char *nu
 	    printlog(LOG_INFO, "Answering\n");
 
 	    /* Unset V.24 Circuit 125, "ring indicator". */
-	    int tioflags;
+	    int tioflags = 0;
 	    ioctl(aslave, TIOCMGET, &tioflags);
 	    tioflags &= ~TIOCM_RI;
 	    ioctl(aslave, TIOCMSET, &tioflags);
@@ -762,7 +762,7 @@ iaxmodem(const char *config, int nondaemon)
     int16_t iaxbuf[VOIP_PACKET_SIZE];
     static t31_state_t t31_state;
     int t31buflen;
-    int tioflags;
+    int tioflags = 0;
     struct group *grent;
     char *devgroup;
     char *pmode;

@@ -1,3 +1,9 @@
+	initialize tioflags before using (Robert Boisvert, Alpine Linux team)
+	partially import a change from upstream libiax2 to address invalid read
+	    size in iax_get_event (Robert Boisvert, Alpine Linux team)
+	import a change from upstream spandsp to address uninitialixed value
+	    in at_cmd_plus_VSID (Robert Boisvert, Alpine Linux team)
+1.3.2
 	add audiobuflen feature
 	fix file modification times on spandsp in tarball
 	stop fast looping after 45 seconds of calling state

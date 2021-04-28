@@ -44,6 +44,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <assert.h>
+#include <syslog.h>
 
 #include "spandsp/telephony.h"
 #include "spandsp/logging.h"
@@ -668,43 +669,6 @@ static int parse_string_list_out(at_state_t *s, const char **t, int *target, int
     default:
         return FALSE;
     }
-    return TRUE;
-}
-/*- End of function --------------------------------------------------------*/
-
-static int parse_string_out(at_state_t *s, const char **t, char **target, const char *prefix)
-{
-    char buf[100];
-
-    switch (*(*t)++)
-    {
-    case '=':
-        switch (**t)
-        {
-        case '?':
-            /* Show possible values */
-            (*t)++;
-            snprintf(buf, sizeof(buf), "%s", (prefix)  ?  prefix  :  "");
-            at_put_response(s, buf);
-            break;
-        default:
-            /* Set value */
-            if (*target)
-                free(*target);
-            /* If this strdup fails, it should be harmless */
-            *target = strdup(*t);
-            break;
-        }
-        break;
-    case '?':
-        /* Show current index value */
-        at_put_response(s, (*target)  ?  *target  :  "");
-        break;
-    default:
-        return FALSE;
-    }
-    while (*t)
-        t++;
     return TRUE;
 }
 /*- End of function --------------------------------------------------------*/
@@ -4965,10 +4929,31 @@ static const char *at_cmd_plus_VSID(at_state_t *s, const char *t)
 {
     /* Extension of V.253 +VCID, Set calling number ID */
     t += 5;
-    if (!parse_string_out(s, &t, &s->local_id, NULL))
+    switch (*t)
+    {
+    case '=':
+        switch (*(t+1))
+        {
+        case '?':
+            /* Show possible values */
+            at_put_response(s, "");
+            break;
+        default:
+            /* Set value */
+            s->local_id = strdup(t + 1);
+            if (at_modem_control(s, AT_MODEM_CONTROL_SETID, s->local_id) < 0)
+                return NULL;
+            break;
+        }
+        break;
+    case '?':
+        /* Show current index value from def */
+        at_put_response(s, (s->local_id)  ?  s->local_id  :  "");
+        break;
+    default:
         return NULL;
-    if (at_modem_control(s, AT_MODEM_CONTROL_SETID, s->local_id) < 0)
-        return NULL;
+    }
+    while (*t) t++;
     return t;
 }
 /*- End of function --------------------------------------------------------*/
