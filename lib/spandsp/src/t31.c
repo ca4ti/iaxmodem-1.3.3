@@ -1459,13 +1459,13 @@ static void hdlc_rx_status(void *user_data, int status)
                 {
                     /* Report CONNECT as soon as possible to avoid a timeout. */
                     at_put_response_code(&s->at_state, AT_RESPONSE_CODE_CONNECT);
-                    s->rx_frame_received = TRUE;
                 }
                 else
                 {
                     buf[0] = AT_RESPONSE_CODE_CONNECT;
                     queue_write_msg(s->rx_queue, buf, 1);
                 }
+                s->rx_frame_received = TRUE;
             }
         }
         break;
@@ -1497,13 +1497,13 @@ static void hdlc_accept_frame(void *user_data, const uint8_t *msg, int len, int 
         {
             /* Report CONNECT as soon as possible to avoid a timeout. */
             at_put_response_code(&s->at_state, AT_RESPONSE_CODE_CONNECT);
-            s->rx_frame_received = TRUE;
         }
         else
         {
             buf[0] = AT_RESPONSE_CODE_CONNECT;
             queue_write_msg(s->rx_queue, buf, 1);
         }
+        s->rx_frame_received = TRUE;
     }
     /* If OK is pending then we just ignore whatever comes in */
     if (!s->at_state.ok_is_pending)

@@ -1,3 +1,4 @@
+	prevent multiple CONNECT messages after +FRH=3
 	initialize tioflags before using (Robert Boisvert, Alpine Linux team)
 	partially import a change from upstream libiax2 to address invalid read
 	    size in iax_get_event (Robert Boisvert, Alpine Linux team)
