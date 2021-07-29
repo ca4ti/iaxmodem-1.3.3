@@ -2015,6 +2015,12 @@ static int process_class1_cmd(at_state_t *t, void *user_data, int direction, int
                         s->at_state.rx_data_bytes = 0;
                     }
                     at_put_response_code(&s->at_state, msg[0]);
+                    if (msg[0] == AT_RESPONSE_CODE_CONNECT)
+                    {
+                        /* If we end our loop on a lone queued CONNECT message,
+                           then we need to prevent additional CONNECT messages. */
+                        s->rx_frame_received = TRUE;
+                    }
                 }
                 else
                 {
