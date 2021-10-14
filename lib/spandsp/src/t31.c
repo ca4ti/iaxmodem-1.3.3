@@ -1985,8 +1985,6 @@ static int process_class1_cmd(at_state_t *t, void *user_data, int direction, int
         if (new_transmit)
         {
             t31_set_at_rx_mode(s, AT_MODE_HDLC);
-            if (!s->t38_mode)
-                at_put_response_code(&s->at_state, AT_RESPONSE_CODE_CONNECT);
         }
         else
         {
